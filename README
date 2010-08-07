@@ -1,7 +1,14 @@
-- 0.9   Jan 18, 2009
-- 0.91  Jan 23, 2009
-- 0.92b Jan 23, 2009
+OpenOffice Spreadsheet for filing KVAT Returns.
 
+This is the openoffice basic modules that is part of the openoffice spreadsheet 
+created to file KVAT returns. The latest version of the spreadsheet can be 
+downloaded from keralataxes.gov.in
 
+The original openoffice spreadsheet for filing keralataxes.gov.in was developed
+and released under GPL by Zyxware
 
+<http://www.zyxware.com/articles/2009/01/16/openoffice-spreadsheet-template-for-filing-kvat-returns-ported-by-zyxware>
 
+The github repository for the application is at
+
+http://github.com/anoopjohn/KVAT-OpenOffice-Macros/

@@ -33,119 +33,25 @@ Sub GenerateTxt(Opt As String)
 	Dim oRange As Object
 	Dim DirPath As String
 	
-	DirPath = GetDirPath()
-
+'	DirPath = GetDirPath()
+    If Dir("c:\KVATS",16)= "" then ' Does the directory exist ?
+		MkDir "c:\KVATS"
+	End If
 
 	If Opt = "P" Then
 		oRange = FindUsedRange(ShPurchase)
 		strtxt = fGenerateTxt(oRange)
-		path = ConvertFromURL(ConvertToURL(DirPath) & "/Purchase.txt")
+		'path = ConvertFromURL(ConvertToURL(DirPath) & "/Purchase.txt")
+		 path = "C:\KVATS\Purchase.txt"
 	Else
 		oRange = FindUsedRange(ShSales)
 		strtxt = fGenerateTxt(oRange)
-		path = ConvertFromURL(ConvertToURL(DirPath) & "/Sales.txt")
+	'	path = ConvertFromURL(ConvertToURL(DirPath) & "/Sales.txt")
+	    path = "C:\KVATS\Sales.txt"
 	End If
 	sWriteFile strtxt, path
 	MsgBox ("Completed. File Written to " & path)
 End Sub
-
-Function fGenerateXML(Opt As String, ByVal rngData As Object, rootNodeName As String) As String
-	Const HEADER As String = "<?xml version=""1.0""?>"
-	Dim TAG_BEGIN  As String
-	Dim TAG_END  As String
-	Dim ROW_BEGIN As String
-	Dim ROW_END As String
-	Dim intColCount As Double
-	Dim intRowCount As Double
-	Dim intColCounter As Double
-	Dim intRowCounter As Double
-	Dim rngCell As Object
-	Dim strXML As String
-	Dim strTabCol() As String
-	'initial tag
-	TAG_BEGIN = vbCrLf & "<" & rootNodeName & ">"
-	TAG_END = vbCrLf & "</" & rootNodeName & ">"
-	ROW_BEGIN = vbCrLf & "<ROW>"
-	ROW_END = "</ROW>"
-	strXML = HEADER
-	strXML = strXML & TAG_BEGIN
-	With rngData
-		'Discover dimensions of the data we
-		'will be dealing with...
-		intColCount = .Columns.Count
-		
-		intRowCount = .Rows.Count
-		
-		Dim strColNames() As String
-		
-		ReDim strColNames(intColCount)
-		ReDim strTabCol(intColCount)
-		If Opt = "P" Then
-		'Hard Coded to Get the Table Column
-			strTabCol(1) = "RPDISERIAL_ID"
-			strTabCol(2) = "RPDVINVOICE_NO"
-			strTabCol(3) = "RPDDINVOICE_DATE"
-			strTabCol(4) = "RPDVSALES_DEALER_NAME"
-			strTabCol(5) = "RPDVSALES_DEALER_ADDRESS"
-			strTabCol(6) = "RPDISALES_REGN_ID"
-			strTabCol(7) = "RPDIVALUE_OF_GOODS"
-			strTabCol(8) = "RPDIVAT_AMOUNT_COLLECT"
-			strTabCol(9) = "RPDITOTAL_INVOICE_AMOUNT"
-		Else
-			strTabCol(1) = "RPDISERIAL_ID"
-			strTabCol(2) = "RPDVINVOICE_NO"
-			strTabCol(3) = "RPDDINVOICE_DATE"
-			strTabCol(4) = "RPDVPURCHASE_DEALER_NAME"
-			strTabCol(5) = "RPDVPURCHASE_DEALER_ADDRESS"
-			strTabCol(6) = "RPDIPURCHASE_REGN_ID"
-			strTabCol(7) = "RPDIVALUE_OF_GOODS"
-			strTabCol(8) = "RPDIVAT_AMOUNT_COLLECT"
-			strTabCol(9) = "RPDITOTAL_INVOICE_AMOUNT"
-		End If
-		'First Row is the Field/Tag names
-		If intRowCount >= 1 Then
-			'   Loop accross columns...
-			For intColCounter = 1 To intColCount
-				
-				'   Mark the cell under current scrutiny by setting
-				'   an object variable...
-				Set rngCell = .Cells(1, intColCounter)
-				'   Is the cell merged?..
-				If Not rngCell.MergeArea.Address = rngCell.Address Then
-					  MsgBox ("!! Cell Merged ... Invalid format")
-					  Exit Function
-				End If
-				'strColNames(intColCounter) = rngCell.Text
-				strColNames(intColCounter) = strTabCol(intColCounter)
-			Next
-		End If
-		'Loop down the table's rows
-		For intRowCounter = 2 To intRowCount
-			strXML = strXML & ROW_BEGIN & vbCrLf
-			ReDim NodeStack(0)
-			'Loop accross columns...
-			For intColCounter = 1 To intColCount + 1
-				'The Column is iterated to last column +1 to find the row terminator
-				If intColCounter <= intColCount Then
-				Set rngCell = .Cells(intRowCounter, intColCounter)
-					'   Is the cell merged?..
-					If Not rngCell.MergeArea.Address = rngCell.Address Then
-						  MsgBox ("!! Cell Merged ... Invalid format")
-						  Exit Function
-					End If
-					'If Trim(rngCell.Text) <> "" Then
-						  strXML = strXML & "<" & Trim(strColNames(intColCounter)) & ">" & Trim(rngCell.Text) & "</" & Trim(strColNames(intColCounter)) & ">" & vbCrLf
-					'End If
-				Else
-					strXML = strXML & ROW_END & vbCrLf
-				End If
-			Next
-		Next
-	End With
-	strXML = strXML & TAG_END
-	'Return the HTML string...
-	fGenerateXML = strXML
-End Function
 
 Function fGenerateTxt(ByVal rngData As Object) As String
 	Dim intColCount As Double
@@ -153,6 +59,8 @@ Function fGenerateTxt(ByVal rngData As Object) As String
 	Dim intColCounter As Double
 	Dim intRowCounter As Double
 	Dim rngCell As Object
+	Dim rngCell1 as object
+	Dim rngCell2 as object
 	Dim strtxt As String
 	Dim strTemp As String
 	With rngData
@@ -160,27 +68,24 @@ Function fGenerateTxt(ByVal rngData As Object) As String
 		intColCount = .Columns.Count
 		intRowCount = .Rows.Count
 		'Loop down the table's rows
-		For intRowCounter = 3 To intRowCount - 1
+		For intRowCounter = 1 To intRowCount -1
 			strTemp = ""
 			'looping for numcols + 1 to add the CRLF in the last go
-			For intColCounter = 0 To intColCount
-				If intColCounter < intColCount Then
-					rngCell = rngData.getCellByPosition(intColCounter, intRowCounter)
-					'Is the cell merged?..
-					If rngCell.getIsMerged() Then
-						MsgBox ("!! Cell Merged ... Invalid format")
-						Exit Function
-					End If
-					' skip if no content
-					If Trim(rngCell.String) <> "" Then
-						If strTemp <> "" Then
+			For intColCounter = 0 To intColCount 
+				If intColCounter < intColCount -1 Then
+					rngCell = rngData.getCellByPosition(intColCounter,intRowCounter)
+					If strTemp <> "" Then
 							strTemp = strTemp & "|" & Trim(rngCell.String)
-						Else
-							strTemp = strTemp & intRowCounter - 2 & "|" & Trim(rngCell.String)
-						End If
+					Else
+							strTemp = strTemp & intRowCounter & "|" & Trim(rngCell.String)
 					End If
-				Else
-					strTemp = strTemp & vbCRLF
+				'Added to Sum up the Cess Amt, Value of Goods and VAT amount
+                ElseIf intColCounter = intColCount -1 Then
+                    rngCell1 = rngData.getCellByPosition(intColCounter - 3,intRowCounter)
+                    rngCell2 = rngData.getCellByPosition(intColCounter - 2,intRowCounter)
+                    strTemp = strTemp & "|" & clng(Trim(rngCell1.String)) + clng(Trim(rngCell2.String)) + clng(Trim(rngCell.String)) & vbCRLF
+				'Else
+				'	strTemp = strTemp & vbCRLF
 				End If
 			Next
 			strtxt = strtxt & strTemp
@@ -197,11 +102,8 @@ REDO:
 	If DirPath = "" Then
 		End
 	End If
-	If Not FileExists(DirPath) Then 
-		MsgBox DirPath & " does not exist. Please try again"
-		Goto REDO
-	ElseIf (GetAttr(DirPath) AND 16) = 0 Then 
-		MsgBox DirPath & " is not a valid directory. Please try again"
+	If Dir(DirPath, vbDirectory) = "" Then
+		MsgBox DirPath & " is not a valid directory name. Please try again"
 		Goto REDO
 	End If
 	GetDirPath = DirPath
@@ -231,7 +133,6 @@ End Function
 Sub InitProc
 	ShPurchase = ThisComponent.Sheets.getByName("Purchases")
 	ShSales = ThisComponent.Sheets.getByName("Sales")
-	ShValidation = ThisComponent.Sheets.getByName("Validation")
 End Sub
 
 'Finds the index of a sheet by name
