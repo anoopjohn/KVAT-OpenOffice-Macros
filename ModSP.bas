@@ -22,7 +22,8 @@ Public Function ProCheckDate(Opt As String, ColName As String, i_intRowCount As 
 	For l_intCount = 3 To i_intRowCount - 1
 		oCell = oSheet.getCellByPosition(curCol, l_intCount)
 		If ValidateDate(oCell.String) = False Then
-			MsgBox "Invalid Date [" & oCell.String & "] in cell " & oCell.AbsoluteName & "." & vbCRLF & "You have to enter date in DD-MM-YYYY format."
+			MsgBox "Invalid Date [" & oCell.String & "] in cell " & ColName & val(l_intCount + 1) & ". You have to enter a valid" & vbCRLF & _
+			       "date earlier than or equal to " & Date & " in DD-MM-YYYY format."
 			SelectObject(oCell)
 			ProCheckDate = False
 			Exit Function
@@ -72,26 +73,26 @@ Sub proValidate_Purchase()
 	l_intRowCount = oRange.Rows.Count
 	If l_intRowCount = 2 Then
 		ShValidation.Unprotect ("cmctcs")
-		SetText(ShValidation, "B1", "Not Validated")
+		Call SetText(ShValidation, "B1", "Not Validated")
 		ShValidation.Protect ("cmctcs")
 		MsgBox "No Data Entered", vbInformation + vbOKOnly
 		Exit Sub
 	End If
 	If ProCheckMandatory("P", "A", l_intRowCount) = False Then
 		ShValidation.Unprotect ("cmctcs")
-		SetText(ShValidation, "B1", "Not Validated")
+		Call SetText(ShValidation, "B1", "Not Validated")
 		ShValidation.Protect ("cmctcs")
 		Exit Sub
 	End If
 	If ProCheckDate("P", "B", l_intRowCount) = False Then
 		ShValidation.Unprotect ("cmctcs")
-		SetText(ShValidation, "B1", "Not Validated")
+		Call SetText(ShValidation, "B1", "Not Validated")
 		ShValidation.Protect ("cmctcs")
 		Exit Sub
 	End If
 	If ProCheckMandatory("P", "C", l_intRowCount) = False Then
 		ShValidation.Unprotect ("cmctcs")
-		SetText(ShValidation, "B1", "Not Validated")
+		Call SetText(ShValidation, "B1", "Not Validated")
 		ShValidation.Protect ("cmctcs")
 		Exit Sub
 	End If
@@ -99,24 +100,24 @@ Sub proValidate_Purchase()
 	ValidateString "P", "E", l_intRowCount
 	If ProCheckMandatory("P", "F", l_intRowCount) = False Then
 		ShValidation.Unprotect ("cmctcs")
-		SetText(ShValidation, "B1", "Not Validated")
+		Call SetText(ShValidation, "B1", "Not Validated")
 		ShValidation.Protect ("cmctcs")
 		Exit Sub
 	End If
 	If ProCheckMandatory("P", "G", l_intRowCount) = False Then
 		ShValidation.Unprotect ("cmctcs")
-		SetText(ShValidation, "B1", "Not Validated")
+		Call SetText(ShValidation, "B1", "Not Validated")
 		ShValidation.Protect ("cmctcs")
 		Exit Sub
 	End If
 	If ProCheckMandatory("P", "H", l_intRowCount) = False Then
 		ShValidation.Unprotect ("cmctcs")
-		SetText(ShValidation, "B1", "Not Validated")
+		Call SetText(ShValidation, "B1", "Not Validated")
 		ShValidation.Protect ("cmctcs")
 		Exit Sub
 	End If
 	ShValidation.Unprotect ("cmctcs")
-	SetText(ShValidation, "B1", "Validated")
+	Call SetText(ShValidation, "B1", "Validated")
 	ShValidation.Protect ("cmctcs")
 	'ActiveWorkbook.SaveAs Filename:="c:\Deepu\TIN.csv", FileFormat:=xlCSV
 	'GenerateXml "P"
@@ -130,26 +131,26 @@ Sub proValidate_Sales()
 	l_intRowCount = oRange.Rows.Count
 	If l_intRowCount = 2 Then
 		ShValidation.Unprotect ("cmctcs")
-		SetText(ShValidation, "B1", "Not Validated")
+		Call SetText(ShValidation, "B1", "Not Validated")
 		ShValidation.Protect ("cmctcs")
 		MsgBox "No Data Entered", vbInformation + vbOKOnly
 		Exit Sub
 	End If
 	If ProCheckMandatory("S", "A", l_intRowCount) = False Then
 		ShValidation.Unprotect ("cmctcs")
-		SetText(ShValidation, "B1", "Not Validated")
+		Call SetText(ShValidation, "B1", "Not Validated")
 		ShValidation.Protect ("cmctcs")
 		Exit Sub
 	End If
 	If ProCheckDate("S", "B", l_intRowCount) = False Then
 		ShValidation.Unprotect ("cmctcs")
-		SetText(ShValidation, "B1", "Not Validated")
+		Call SetText(ShValidation, "B1", "Not Validated")
 		ShValidation.Protect ("cmctcs")
 		Exit Sub
 	End If
 	If ProCheckMandatory("S", "C", l_intRowCount) = False Then
 		ShValidation.Unprotect ("cmctcs")
-		SetText(ShValidation, "B1", "Not Validated")
+		Call SetText(ShValidation, "B1", "Not Validated")
 		ShValidation.Protect ("cmctcs")
 		Exit Sub
 	End If
@@ -157,24 +158,24 @@ Sub proValidate_Sales()
 	ValidateString "S", "E", l_intRowCount
 	If ProCheckMandatory("S", "F", l_intRowCount) = False Then
 		ShValidation.Unprotect ("cmctcs")
-		SetText(ShValidation, "B1", "Not Validated")
+		Call SetText(ShValidation, "B1", "Not Validated")
 		ShValidation.Protect ("cmctcs")
 		Exit Sub
 	End If
 	If ProCheckMandatory("S", "G", l_intRowCount) = False Then
 		ShValidation.Unprotect ("cmctcs")
-		SetText(ShValidation, "B1", "Not Validated")
+		Call SetText(ShValidation, "B1", "Not Validated")
 		ShValidation.Protect ("cmctcs")
 		Exit Sub
 	End If
 	If ProCheckMandatory("S", "H", l_intRowCount) = False Then
 		ShValidation.Unprotect ("cmctcs")
-		SetText(ShValidation, "B1", "Not Validated")
+		Call SetText(ShValidation, "B1", "Not Validated")
 		ShValidation.Protect ("cmctcs")
 		Exit Sub
 	End If
 	ShValidation.Unprotect ("cmctcs")
-	SetText(ShValidation, "B1", "Validated")
+	Call SetText(ShValidation, "B1", "Validated")
 	ShValidation.Protect ("cmctcs")
 	'ActiveWorkbook.SaveAs Filename:="c:\Deepu\TIN.csv", FileFormat:=xlCSV
 	'GenerateXml "S"

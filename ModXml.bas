@@ -197,8 +197,11 @@ REDO:
 	If DirPath = "" Then
 		End
 	End If
-	If Dir(DirPath, vbDirectory) = "" Then
-		MsgBox DirPath & " is not a valid directory name. Please try again"
+	If Not FileExists(DirPath) Then 
+		MsgBox DirPath & " does not exist. Please try again"
+		Goto REDO
+	ElseIf (GetAttr(DirPath) AND 16) = 0 Then 
+		MsgBox DirPath & " is not a valid directory. Please try again"
 		Goto REDO
 	End If
 	GetDirPath = DirPath
