@@ -206,21 +206,32 @@ Public Function ProCheckMandatory(Opt As String, ColName As String, i_intRowCoun
 	ProCheckMandatory = True
 End Function
 
-Public Function ValidateDate(i_date As String) As Boolean
-	If (Val(Mid(i_date, 4, 2)) < 1 Or Val(Mid(i_date, 4, 2)) > 12) Then
+Public Function ValidateDate(strDate As String) As Boolean
+	Dim dDate as Date
+	If (Val(Mid(strDate, 4, 2)) < 1 Or Val(Mid(strDate, 4, 2)) > 12) Then
 		ValidateDate = False
 		Exit Function
 	End If
-	If Val(Mid(i_date, 7, 4)) < 1900 Then
+	If Val(Mid(strDate, 7, 4)) < 1900 Then
 		ValidateDate = False
 		Exit Function
 	End If
-	If (IsDate(i_date)) = False Then
+	If (IsDate(strDate)) = False Then
 		ValidateDate = False
 		Exit Function
 	End If
-
-	If CDate(i_date) > Date Then
+	'check if date is a valid date in DD-MM-YYYY format	
+	On Error Resume Next
+	dDate = DateSerial (Val(Mid(strDate, 7, 4)), Val(Mid(strDate, 4, 2)), Val(Mid(strDate, 1, 2)))	
+	If Err <> 0 Then
+		MsgBox "Error"
+		ValidateDate = False
+		On Error GoTo 0
+		Exit Function 
+	End If
+	On Error GoTo 0
+	'Date has to be less than or equal to today
+	If dDate > Date Then
 		ValidateDate = False
 		Exit Function
 	End If
