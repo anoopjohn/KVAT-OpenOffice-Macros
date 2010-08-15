@@ -2,6 +2,8 @@ Rem Attribute VBA_ModuleType=VBAModule
 Option VBASupport 1
 Option Explicit
 
+'@file - ModXml.bas
+
 Sub GenerateXml(Opt As String)
 	Dim strXML As String
 	Dim path As String
@@ -22,9 +24,11 @@ Sub GenerateXml(Opt As String)
 	End If
 	sWriteFile strXML, path
 	MsgBox ("Completed. XML Written to " & path)
+	
 FolderError:
 	Exit Sub
 	Resume Next
+	
 End Sub
 
 Sub GenerateTxt(Opt As String)
